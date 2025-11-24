@@ -34,7 +34,7 @@ def scrape_get_all_teams():
     nba_teams = teams.get_teams()
 
     df = pd.DataFrame(nba_teams)
-    df.to_csv('nba_teams.csv')
+    df.to_csv('uncleaned_csv/nba_teams.csv')
     df
     
     
@@ -48,7 +48,7 @@ def scrape_get_all_players_of_all_time():
     all_players = players.get_players()
 
     df = pd.DataFrame(all_players)
-    df.to_csv("all_players.csv")
+    df.to_csv("uncleaned_csv/all_players.csv")
     df
 
 
@@ -62,7 +62,7 @@ def scrape_single_player_by_id():
 
     info = career.get_data_frames()[0]
     df = pd.DataFrame(info)
-    df.to_csv("Nikola_Jokic_Info.csv")
+    df.to_csv("uncleaned_csv/Nikola_Jokic_Info.csv")
     df
 
 
@@ -74,7 +74,7 @@ def scrape_single_player_by_id():
 """
 def scrape_player_info_by_full_name():
     # var to get player's info and to see if the player is active
-    name = "Alex Abrines"
+    name = "Jaylen Adams"
 
 
     # finding playyer by their full name
@@ -86,7 +86,7 @@ def scrape_player_info_by_full_name():
     # removing whitespaces from player name to be used as a file name (e.g AlexAbrines.csv)
     csv_name = name.replace(" ", "")
 
-    df.to_csv(f"{csv_name}.csv")
+    df.to_csv(f"uncleaned_csv/{csv_name}.csv")
     df
 
 
@@ -128,7 +128,7 @@ def scrape_ACTIVE_PLAYERS():
     df = pd.json_normalize(data["data"])
 
     # offloading to csv file
-    df.to_csv("ACTIVE_PLAYERS.csv", index=False)
+    df.to_csv("uncleaned_csv/ACTIVE_PLAYERS.csv", index=False)
 
     print("Active players scraped:", len(df))
     
