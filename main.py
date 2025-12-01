@@ -7,8 +7,9 @@ from dotenv import load_dotenv
 
 from balldontlie import BalldontlieAPI
 
-from nba_api.stats.endpoints import playercareerstats
+from nba_api.stats.endpoints import playercareerstats, leaguestandings, leaguedashteamstats
 from nba_api.stats.static import teams, players
+from nba_api.stats.library.parameters import SeasonAll
 
 
 def main():
@@ -18,6 +19,7 @@ def main():
     scrape_single_player_by_id()
     scrape_player_info_by_full_name()
     scrape_ACTIVE_PLAYERS()
+    scrape_team_ratings()
 
 
 """
@@ -132,5 +134,28 @@ def scrape_ACTIVE_PLAYERS():
 
     print("Active players scraped:", len(df))
     
+
+"""
+6. Getting team ratings (Wins, Losses, Defensive Ratings)
+    "league_standings.csv"
+    "advanced_team_stats.csv"
+"""
+def scrape_team_ratings():
+    # Get current league standings (Wins, Losses)
+    standings = leaguestandings.LeagueStandings()
+    df_standings = standings.get_data_frames()[0]
+    df_standings.to_csv("uncleaned_csv/league_standings.csv")
+
+    # Get advanced team stats (Defensive Rating, Offensive Rating, etc.)
+    # measure_type_detailed_defense='Advanced' gets you DEF_RATING
+    advanced_stats = leaguedashteamstats.LeagueDashTeamStats(measure_type_detailed_defense='Advanced')
+    df_advanced = advanced_stats.get_data_frames()[0]
+    df_advanced.to_csv("uncleaned_csv/advanced_team_stats.csv")
+
+    print("Active players scraped:", len(df_advanced))
+    
+    
+
+
 
 main()
