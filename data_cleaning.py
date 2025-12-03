@@ -1,9 +1,30 @@
+"""
+NBA Data Cleaning Module
+
+This module handles comprehensive data cleaning for all NBA datasets.
+Each cleaning function documents the issues found, decisions made, and impact.
+
+Cleaning Strategy:
+- Missing values: Strategic handling based on column importance
+- Duplicates: Removed to ensure data integrity
+- Outliers: Careful validation before removal (NBA has legitimate extremes)
+- Formatting: Standardized text and data types for analysis
+"""
+
 import json
 import pandas as pd
 import numpy as np
 import os
 
+
 def clean_data():
+    """Running all cleaning functions and create output directories"""
+    
+    # creating /uncleaned_csv directory if it doesn't exist
+    os.makedirs('cleaned_csv', exist_ok=True)
+    
+    
+    # cleaning all csv files found in /uncleaned_csv folder
     clean_get_all_teams()
     clean_get_all_players_of_all_time()
     clean_single_player_by_id()
@@ -11,40 +32,62 @@ def clean_data():
     clean_ACTIVE_PLAYERS()
     clean_advanced_team_stats()
     clean_league_standings()
+
+    print("\nData cleaning complete")
     
     
 
 """
 1. Cleaning the NBA Teams CSV
-    "nba_teams_CLEANED.csv"
+   Output: "nba_teams_CLEANED.csv"
+
+   Issues Addressed:
+   - Missing values in team information
+   - Duplicate team entries
+   - Inconsistent text formatting
+
+   Cleaning Decisions:
+   - Missing values: Fill with 'Unknown' (team data is typically complete)
+   - Duplicates: Remove (teams should be unique)
+   - Text formatting: Standardize to title case for consistency
 """
 def clean_get_all_teams():
-    # Load the data
+    print("\n Cleaning NBA Teams dataset...")
     df = pd.read_csv("uncleaned_csv/nba_teams.csv")
-    
-    print(f"Original shape: {df.shape}")
-    print(f"Missing values:\n{df.isnull().sum()}")
-    
-    # Example cleaning steps
+
+
     # 1. Handle missing values
     df.fillna('Unknown', inplace=True)
-    
+
     # 2. Remove duplicates
     df.drop_duplicates(inplace=True)
-    
+
     # 3. Formatting
     df['full_name'] = df['full_name'].str.strip().str.title()
-    
-    print(f"\nCleaned shape: {df.shape}")
-    print(f"Remaining missing values:\n{df.isnull().sum()}")
-    
+
     # Save the cleaned data
     df.to_csv("cleaned_csv/nba_teams_CLEANED.csv", index=False)
+
+
     print("\nCleaned data saved to cleaned_csv/nba_teams_CLEANED.csv")
 
 
-"""2. Cleaning the All Players of All Time CSV
-    "all_players_CLEANED.csv"""
+
+
+"""
+2. Cleaning the All Players of All Time CSV
+   Output: "all_players_CLEANED.csv"
+
+   Issues Addressed:
+   - Missing values in player names or IDs
+   - Duplicate player entries
+   - Inconsistent text formatting in names
+
+   Cleaning Decisions:
+   - Missing values: Fill with 'Unknown' to maintain record existence
+   - Duplicates: Remove to ensure unique player records
+   - Text formatting: Standardize first and last names to title case
+"""
 def clean_get_all_players_of_all_time():
     # Load the data
     df = pd.read_csv("uncleaned_csv/all_players.csv")
@@ -71,8 +114,27 @@ def clean_get_all_players_of_all_time():
     print("\nCleaned data saved to cleaned_csv/all_players_CLEANED.csv")
     
 
-"""3. Cleaning Single Player by ID CSV
-    "Nikola_Jokic_Info_CLEANED.csv
+
+
+
+"""
+3. Cleaning Single Player by ID CSV
+   Output: "Nikola_Jokic_Info_CLEANED.csv"
+
+   Issues Addressed:
+   - Unnecessary index columns from raw export
+   - Missing values in statistical columns (numeric and categorical)
+   - Duplicate entries
+   - Inconsistent formatting in team abbreviations
+   - Incorrect data types (e.g., Age as string)
+
+   Cleaning Decisions:
+   - Unnamed columns: Dropped artifacts
+   - Missing numeric: Filled with 0 assuming no stats recorded
+   - Missing categorical: Filled with 'Unknown'
+   - Duplicates: Removed
+   - Formatting: Team abbreviations standardized to uppercase
+   - Data Types: Converted Age to float for numerical analysis
 """
 def clean_single_player_by_id():
     # Load the data
@@ -110,10 +172,23 @@ def clean_single_player_by_id():
     # Save the cleaned data
     df.to_csv("cleaned_csv/Nikola_Jokic_Info_CLEANED.csv", index=False)
     print("\nCleaned data saved to cleaned_csv/Nikola_Jokic_Info_CLEANED.csv")
+ 
+ 
     
     
-"""4. Cleaning Player Info by Full Name CSV
-    "AlexAbrines_CLEANED.csv
+"""
+4. Cleaning Player Info by Full Name CSV
+   Output: "AlexAbrines_CLEANED.csv"
+
+   Issues Addressed:
+   - Missing values in player details
+   - Duplicate records
+   - Inconsistent capitalization in names
+
+   Cleaning Decisions:
+   - Missing values: Fill with 'Unknown'
+   - Duplicates: Remove to ensure unique records
+   - Text formatting: Standardize names to title case for consistency
 """
 def clean_player_info_by_full_name():
     # Load the data
@@ -142,33 +217,54 @@ def clean_player_info_by_full_name():
 
 
 
-"""5. Cleaning Active Players CSV
-    "ACTIVE_PLAYERS_CLEANED.csv"
+
+
+
+"""
+5. Cleaning Active Players CSV
+   Output: "ACTIVE_PLAYERS_CLEANED.csv"
+
+   Issues Addressed:
+   - Missing values in name fields (critical - player identification)
+   - Missing values in numeric fields (height, weight, etc.)
+   - Duplicate player entries
+   - Outliers in physical measurements
+   - Inconsistent text formatting
+
+   Cleaning Decisions:
+   - Missing names: Dropped (cannot identify player without name)
+   - Missing numeric values: Filled with median (preserves distribution)
+   - Outliers: REMOVED using IQR method
+     WARNING: This may remove legitimate NBA players with extreme measurements
+     (e.g., very tall centers like Boban Marjanovic, or shorter guards)
+     Consider reviewing this decision for production analysis
+   - Text formatting: Standardized to title case for consistency
+
+   Impact: Outlier removal may reduce dataset by 5-15% depending on distributions
 """
 def clean_ACTIVE_PLAYERS():
-    # Load the data
+    print("\nCleaning Active Players dataset...")
     df = pd.read_csv("uncleaned_csv/ACTIVE_PLAYERS.csv")
-    
-    print(f"Original shape: {df.shape}")
-    print(f"Missing values:\n{df.isnull().sum()}")
-    
-    # 1. Handle missing values (more strategic than just ffill)
+
+
+    # 1. Handle missing values (strategic approach)
     # Drop rows where critical columns are missing
     df.dropna(subset=['first_name', 'last_name'], inplace=True)
-    
-    # Fill numeric columns with mean/median
+
+    # Fill numeric columns with median (more robust than mean for skewed data)
     numeric_cols = df.select_dtypes(include=[np.number]).columns
     df[numeric_cols] = df[numeric_cols].fillna(df[numeric_cols].median())
-    
-    # Fill categorical columns with mode or 'Unknown'
+
+    # Fill categorical columns with 'Unknown'
     categorical_cols = df.select_dtypes(include=['object']).columns
     for col in categorical_cols:
         df[col].fillna('Unknown', inplace=True)
-    
+
     # 2. Remove duplicates
     df.drop_duplicates(inplace=True)
-    
-    # 3. Handle outliers (example for numeric columns)
+
+    # 3. Handle outliers - NOTE: This is aggressive and may remove valid players
+    original_before_outliers = len(df)
     for col in numeric_cols:
         Q1 = df[col].quantile(0.25)
         Q3 = df[col].quantile(0.75)
@@ -176,27 +272,38 @@ def clean_ACTIVE_PLAYERS():
         lower_bound = Q1 - 1.5 * IQR
         upper_bound = Q3 + 1.5 * IQR
         df = df[(df[col] >= lower_bound) & (df[col] <= upper_bound)]
-    
-    # 4. Formatting
-    # Standardize text columns
+
+    print(f"Outlier removal: {original_before_outliers - len(df)} rows removed ({((original_before_outliers - len(df))/original_before_outliers*100):.1f}%)")
+
+    # 4. Formatting - standardize text columns
     for col in categorical_cols:
         df[col] = df[col].str.strip().str.title()
-    
-    # Convert data types if needed
-    # df['some_date_column'] = pd.to_datetime(df['some_date_column'])
-    
-    print(f"\nCleaned shape: {df.shape}")
-    print(f"Remaining missing values:\n{df.isnull().sum()}")
-    
+
     # Save the cleaned data
     df.to_csv("cleaned_csv/ACTIVE_PLAYERS_CLEANED.csv", index=False)
-    print("\nCleaned data saved to cleaned_csv/ACTIVE_PLAYERS_CLEANED.csv")
+
+
+    print("Saved: cleaned_csv/ACTIVE_PLAYERS_CLEANED.csv")
     
+
+
 
 
 """
 6. Cleaning the Advanced Team Stats CSV
-    "advanced_team_stats_CLEANED.csv"
+   Output: "advanced_team_stats_CLEANED.csv"
+
+   Issues Addressed:
+   - Irrelevant columns for analysis
+   - Inconsistent text formatting and data types
+   - Missing values in critical metrics
+   - Logical inconsistencies (e.g., Wins + Losses != Games Played)
+
+   Cleaning Decisions:
+   - Column Selection: Kept only relevant metrics (W, L, Ratings)
+   - Formatting: Stripped whitespace, coerced numeric types
+   - Missing Values: Dropped rows with missing critical data
+   - Logic Checks: Verified GP > 0 and W + L consistency
 """
 def clean_advanced_team_stats():
     print("\nCleaning: Advanced Team Stats...")
@@ -292,10 +399,23 @@ def clean_advanced_team_stats():
         print("File not found. Please ensure 'uncleaned_csv/advanced_team_stats.csv' exists.")
         
         
+        
 
 """
 7. Cleaning League Standings
-   "league_standings_CLEANED.csv"
+   Output: "league_standings_CLEANED.csv"
+
+   Issues Addressed:
+   - Missing values in clinch indicators (often empty if not clinched)
+   - Missing numeric values (e.g., Games Back)
+   - Inconsistent text formatting in city/team names
+   - Logical outliers in percentages and points per game
+
+   Cleaning Decisions:
+   - Clinch columns: Filled NaNs with 'No' (logical assumption)
+   - Numeric NaNs: Filled with 0
+   - Text formatting: Standardized to title case
+   - Outliers: Filtered WinPCT (0-1) and PointsPG (60-160) to remove bad data
 """
 def clean_league_standings():
     print("\nCleaning: League Standings...")
