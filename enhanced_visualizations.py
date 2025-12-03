@@ -17,15 +17,18 @@ sns.set_style("whitegrid")
 plt.rcParams['figure.figsize'] = (12, 6)
 plt.rcParams['font.size'] = 10
 
+
+"""Create visualizations directory if it doesn't exist"""
 def ensure_viz_directory():
-    """Create visualizations directory if it doesn't exist"""
     os.makedirs('visualizations', exist_ok=True)
 
+
+"""
+Convert height like '6-6' to total inches
+Returns None for invalid values
+"""
 def height_to_inches(h):
-    """
-    Convert height like '6-6' to total inches
-    Returns None for invalid values
-    """
+
     if pd.isna(h):
         return None
     if isinstance(h, (int, float)):
@@ -40,27 +43,26 @@ def height_to_inches(h):
         return None
 
 
-def create_player_visualizations():
-    """
-    Create comprehensive player analysis visualizations
+"""
+Create comprehensive player analysis visualizations
 
-    Visualizations:
-    1. Height distribution histogram
-    2. Weight distribution histogram
-    3. Position frequency bar chart
-    4. Players per team bar chart
-    5. Average height by position
-    6. Average weight by position
-    """
-    print("\n" + "="*80)
-    print("  CREATING PLAYER VISUALIZATIONS")
-    print("="*80 + "\n")
+Visualizations:
+1. Height distribution histogram
+2. Weight distribution histogram
+3. Position frequency bar chart
+4. Players per team bar chart
+5. Average height by position
+6. Average weight by position
+"""
+def create_player_visualizations():
 
     df_players = pd.read_csv("cleaned_csv/ACTIVE_PLAYERS_CLEANED.csv")
 
     # Convert height and weight
     df_players["height_in"] = df_players["height"].apply(height_to_inches)
     df_players["weight"] = pd.to_numeric(df_players["weight"], errors="coerce")
+
+
 
     # 1. HEIGHT DISTRIBUTION
     plt.figure(figsize=(12, 6))
@@ -75,6 +77,7 @@ def create_player_visualizations():
     plt.legend()
     plt.grid(axis='y', alpha=0.3)
 
+
     # Add interpretation text box
     interpretation = (f"Mean: {heights.mean():.1f}\" | Median: {heights.median():.1f}\" | Std: {heights.std():.1f}\"\n"
                      f"Range: {heights.min():.0f}\" to {heights.max():.0f}\" ({heights.max()-heights.min():.0f}\" spread)")
@@ -84,11 +87,10 @@ def create_player_visualizations():
 
     plt.tight_layout()
     plt.savefig('visualizations/1_height_distribution.png', dpi=300, bbox_inches='tight')
-    print("✓ Saved: visualizations/1_height_distribution.png")
-    print("  Interpretation: The height distribution shows a normal distribution centered")
-    print("  around 78-79 inches (~6'6\"), which is typical for professional basketball.")
-    print("  The distribution includes players from ~67\" (guards) to ~87\" (centers).\n")
+    print("Saved: visualizations/1_height_distribution.png")
     plt.close()
+
+
 
     # 2. WEIGHT DISTRIBUTION
     plt.figure(figsize=(12, 6))
@@ -111,10 +113,10 @@ def create_player_visualizations():
 
     plt.tight_layout()
     plt.savefig('visualizations/2_weight_distribution.png', dpi=300, bbox_inches='tight')
-    print("✓ Saved: visualizations/2_weight_distribution.png")
-    print("  Interpretation: Weight distribution shows professional athletes typically weigh")
-    print("  200-220 lbs, with position-specific variations (guards lighter, centers heavier).\n")
+    print("Saved: visualizations/2_weight_distribution.png")
     plt.close()
+
+
 
     # 3. POSITION FREQUENCY
     plt.figure(figsize=(10, 6))
@@ -133,13 +135,14 @@ def create_player_visualizations():
     plt.ylabel("Number of Players", fontsize=12, fontweight='bold')
     plt.title("Active NBA Players by Position\n(Relatively Balanced Distribution Across Positions)",
               fontsize=14, fontweight='bold', pad=20)
+    
     plt.grid(axis='y', alpha=0.3)
     plt.tight_layout()
     plt.savefig('visualizations/3_position_distribution.png', dpi=300, bbox_inches='tight')
-    print("✓ Saved: visualizations/3_position_distribution.png")
-    print(f"  Interpretation: Most common position is {position_counts.idxmax()} with {position_counts.max()} players.")
-    print("  Distribution shows balanced roster construction across the league.\n")
+    print("Saved: visualizations/3_position_distribution.png")
     plt.close()
+
+
 
     # 4. PLAYERS PER TEAM
     plt.figure(figsize=(14, 7))
@@ -156,10 +159,10 @@ def create_player_visualizations():
     plt.xticks([])  # Hide x-tick labels for clarity
     plt.tight_layout()
     plt.savefig('visualizations/4_players_per_team.png', dpi=300, bbox_inches='tight')
-    print("✓ Saved: visualizations/4_players_per_team.png")
-    print(f"  Interpretation: Average roster size is {team_counts.mean():.1f} players.")
-    print(f"  Range: {team_counts.min()} to {team_counts.max()} players per team.\n")
+    print("Saved: visualizations/4_players_per_team.png")
     plt.close()
+
+
 
     # 5. AVERAGE HEIGHT BY POSITION
     plt.figure(figsize=(10, 6))
@@ -184,10 +187,10 @@ def create_player_visualizations():
     plt.grid(axis='y', alpha=0.3)
     plt.tight_layout()
     plt.savefig('visualizations/5_height_by_position.png', dpi=300, bbox_inches='tight')
-    print("✓ Saved: visualizations/5_height_by_position.png")
-    print("  Interpretation: Clear height hierarchy by position reflects basketball roles.")
-    print(f"  Centers average {height_by_pos.loc[height_by_pos.index[0], 'mean']:.1f}\", guards ~6-7\" shorter.\n")
+    print("Saved: visualizations/5_height_by_position.png")
     plt.close()
+
+
 
     # 6. AVERAGE WEIGHT BY POSITION
     plt.figure(figsize=(10, 6))
@@ -212,28 +215,25 @@ def create_player_visualizations():
     plt.grid(axis='y', alpha=0.3)
     plt.tight_layout()
     plt.savefig('visualizations/6_weight_by_position.png', dpi=300, bbox_inches='tight')
-    print("✓ Saved: visualizations/6_weight_by_position.png")
-    print("  Interpretation: Weight follows position requirements - centers need mass for")
-    print("  paint presence, guards prioritize speed and agility.\n")
+    print("Saved: visualizations/6_weight_by_position.png")
     plt.close()
 
 
-def create_team_performance_visualizations():
-    """
-    Create team performance analysis visualizations
 
-    Visualizations:
-    7. Offensive Rating vs Wins scatter plot
-    8. Defensive Rating vs Wins scatter plot
-    9. Net Rating vs Win Percentage scatter plot
-    10. Team wins bar chart
-    """
-    print("\n" + "="*80)
-    print("  CREATING TEAM PERFORMANCE VISUALIZATIONS")
-    print("="*80 + "\n")
+"""
+Create team performance analysis visualizations
+
+Visualizations:
+7. Offensive Rating vs Wins scatter plot
+8. Defensive Rating vs Wins scatter plot
+9. Net Rating vs Win Percentage scatter plot
+10. Team wins bar chart
+"""
+def create_team_performance_visualizations():
 
     df = pd.read_csv("cleaned_csv/advanced_team_stats_CLEANED.csv")
     df['WIN_PCT'] = (df['W'] / df['GP']).round(3)
+
 
     # 7. OFFENSIVE RATING VS WINS
     plt.figure(figsize=(12, 7))
@@ -242,6 +242,8 @@ def create_team_performance_visualizations():
     plt.scatter(df["OFF_RATING"], df["W"], s=100, alpha=0.6, c=df['W'],
                 cmap='RdYlGn', edgecolors='black', linewidth=1)
     plt.colorbar(label='Wins')
+
+
 
     # Add trend line
     z = np.polyfit(df["OFF_RATING"], df["W"], 1)
@@ -263,9 +265,9 @@ def create_team_performance_visualizations():
     plt.tight_layout()
     plt.savefig('visualizations/7_offense_vs_wins.png', dpi=300, bbox_inches='tight')
     print("✓ Saved: visualizations/7_offense_vs_wins.png")
-    print(f"  Interpretation: Strong correlation (r={correlation:.3f}) shows offensive efficiency")
-    print("  is a major predictor of team success.\n")
     plt.close()
+
+
 
     # 8. DEFENSIVE RATING VS WINS
     plt.figure(figsize=(12, 7))
@@ -297,9 +299,9 @@ def create_team_performance_visualizations():
     plt.tight_layout()
     plt.savefig('visualizations/8_defense_vs_wins.png', dpi=300, bbox_inches='tight')
     print("✓ Saved: visualizations/8_defense_vs_wins.png")
-    print(f"  Interpretation: Negative correlation (r={correlation:.3f}) confirms that")
-    print("  better defense (lower rating) leads to more wins.\n")
     plt.close()
+    
+    
 
     # 9. NET RATING VS WIN PERCENTAGE
     plt.figure(figsize=(12, 7))
@@ -329,9 +331,9 @@ def create_team_performance_visualizations():
     plt.tight_layout()
     plt.savefig('visualizations/9_net_rating_vs_win_pct.png', dpi=300, bbox_inches='tight')
     print("✓ Saved: visualizations/9_net_rating_vs_win_pct.png")
-    print(f"  Interpretation: VERY STRONG correlation (r={correlation:.3f})! Net Rating")
-    print("  (offense - defense) is the best single metric for predicting wins.\n")
     plt.close()
+
+
 
     # 10. TEAM WINS BAR CHART
     plt.figure(figsize=(14, 7))
@@ -351,26 +353,23 @@ def create_team_performance_visualizations():
     plt.tight_layout()
     plt.savefig('visualizations/10_team_wins.png', dpi=300, bbox_inches='tight')
     print("✓ Saved: visualizations/10_team_wins.png")
-    print(f"  Interpretation: {df_sorted.iloc[0]['TEAM_NAME']} leads with {df_sorted.iloc[0]['W']:.0f} wins.")
-    print(f"  League average: {df['W'].mean():.1f} wins.\n")
     plt.close()
 
 
-def create_jokic_visualizations():
-    """
-    Create Nikola Jokic career progression visualizations
+"""
+Create Nikola Jokic career progression visualizations
 
-    Visualizations:
-    11. Jokic points progression
-    12. Jokic rebounds progression
-    13. Jokic assists progression
-    """
-    print("\n" + "="*80)
-    print("  CREATING JOKIC CAREER VISUALIZATIONS")
-    print("="*80 + "\n")
+Visualizations:
+11. Jokic points progression
+12. Jokic rebounds progression
+13. Jokic assists progression
+"""
+def create_jokic_visualizations():
 
     df = pd.read_csv("cleaned_csv/Nikola_Jokic_Info_CLEANED.csv")
     df["SEASON"] = df["SEASON_ID"].astype(str).str[-2:].astype(int) + 2000
+
+
 
     # 11. POINTS PROGRESSION
     plt.figure(figsize=(12, 6))
@@ -390,8 +389,9 @@ def create_jokic_visualizations():
     plt.tight_layout()
     plt.savefig('visualizations/11_jokic_points.png', dpi=300, bbox_inches='tight')
     print("✓ Saved: visualizations/11_jokic_points.png")
-    print(f"  Interpretation: Consistent scoring with peak of {df['PTS'].max():.0f} points.\n")
     plt.close()
+
+
 
     # 12. REBOUNDS PROGRESSION
     plt.figure(figsize=(12, 6))
@@ -411,8 +411,9 @@ def create_jokic_visualizations():
     plt.tight_layout()
     plt.savefig('visualizations/12_jokic_rebounds.png', dpi=300, bbox_inches='tight')
     print("✓ Saved: visualizations/12_jokic_rebounds.png")
-    print(f"  Interpretation: Dominant rebounding averaging {df['REB'].mean():.0f}/season.\n")
     plt.close()
+
+
 
     # 13. ASSISTS PROGRESSION
     plt.figure(figsize=(12, 6))
@@ -431,9 +432,7 @@ def create_jokic_visualizations():
 
     plt.tight_layout()
     plt.savefig('visualizations/13_jokic_assists.png', dpi=300, bbox_inches='tight')
-    print("✓ Saved: visualizations/13_jokic_assists.png")
-    print(f"  Interpretation: Exceptional playmaking - {df['AST'].mean():.0f} assists/season")
-    print("  is guard-like production from a center position!\n")
+    print("Saved: visualizations/13_jokic_assists.png")
     plt.close()
 
 
@@ -441,19 +440,11 @@ def main():
     """Generate all enhanced visualizations"""
     ensure_viz_directory()
 
-    print("\n" + "█"*80)
-    print("█" + " "*78 + "█")
-    print("█" + "  NBA DATA VISUALIZATION - COMPREHENSIVE ANALYSIS".center(78) + "█")
-    print("█" + " "*78 + "█")
-    print("█"*80)
-
     create_player_visualizations()
     create_team_performance_visualizations()
     create_jokic_visualizations()
 
-    print("\n" + "█"*80)
-    print("█" + "  ALL VISUALIZATIONS COMPLETE - 13 plots saved to visualizations/".center(78) + "█")
-    print("█"*80 + "\n")
+    print("All visualizations complete.")
 
 
 if __name__ == "__main__":
