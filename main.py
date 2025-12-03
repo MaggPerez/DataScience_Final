@@ -76,7 +76,7 @@ def scrape_single_player_by_id():
 """
 def scrape_player_info_by_full_name():
     # var to get player's info and to see if the player is active
-    name = "Jaylen Adams"
+    name = "Alex Abrines"
 
 
     # finding playyer by their full name

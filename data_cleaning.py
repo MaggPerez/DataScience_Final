@@ -16,28 +16,15 @@ import pandas as pd
 import numpy as np
 import os
 
-def print_cleaning_summary(dataset_name, original_shape, cleaned_shape, original_missing, cleaned_missing):
-    """Print a summary of cleaning operations"""
-    print("\n" + "="*80)
-    print(f"CLEANING SUMMARY: {dataset_name}")
-    print("="*80)
-    print(f"Original shape: {original_shape}")
-    print(f"Cleaned shape: {cleaned_shape}")
-    print(f"Rows removed: {original_shape[0] - cleaned_shape[0]} ({((original_shape[0] - cleaned_shape[0])/original_shape[0]*100):.1f}%)")
-    print(f"\nOriginal missing values:\n{original_missing.to_string()}")
-    print(f"\nCleaned missing values:\n{cleaned_missing.to_string()}")
-    print("="*80 + "\n")
 
 def clean_data():
-    """Execute all cleaning functions and create output directories"""
+    """Running all cleaning functions and create output directories"""
+    
+    # creating /uncleaned_csv directory if it doesn't exist
     os.makedirs('cleaned_csv', exist_ok=True)
-
-    print("\n" + "█"*80)
-    print("█" + " "*78 + "█")
-    print("█" + "  NBA DATA CLEANING PIPELINE".center(78) + "█")
-    print("█" + " "*78 + "█")
-    print("█"*80 + "\n")
-
+    
+    
+    # cleaning all csv files found in /uncleaned_csv folder
     clean_get_all_teams()
     clean_get_all_players_of_all_time()
     clean_single_player_by_id()
@@ -46,9 +33,7 @@ def clean_data():
     clean_advanced_team_stats()
     clean_league_standings()
 
-    print("\n" + "█"*80)
-    print("█" + "  DATA CLEANING COMPLETE".center(78) + "█")
-    print("█"*80 + "\n")
+    print("\nData cleaning complete")
     
     
 
@@ -67,11 +52,9 @@ def clean_data():
    - Text formatting: Standardize to title case for consistency
 """
 def clean_get_all_teams():
-    print("\n→ Cleaning NBA Teams dataset...")
+    print("\n Cleaning NBA Teams dataset...")
     df = pd.read_csv("uncleaned_csv/nba_teams.csv")
 
-    original_shape = df.shape
-    original_missing = df.isnull().sum()
 
     # 1. Handle missing values
     df.fillna('Unknown', inplace=True)
@@ -85,8 +68,10 @@ def clean_get_all_teams():
     # Save the cleaned data
     df.to_csv("cleaned_csv/nba_teams_CLEANED.csv", index=False)
 
-    print_cleaning_summary("NBA Teams", original_shape, df.shape, original_missing, df.isnull().sum())
-    print("✓ Saved: cleaned_csv/nba_teams_CLEANED.csv")
+
+    print("\nCleaned data saved to cleaned_csv/nba_teams_CLEANED.csv")
+
+
 
 
 """2. Cleaning the All Players of All Time CSV
@@ -211,11 +196,9 @@ def clean_player_info_by_full_name():
    Impact: Outlier removal may reduce dataset by 5-15% depending on distributions
 """
 def clean_ACTIVE_PLAYERS():
-    print("\n→ Cleaning Active Players dataset...")
+    print("\nCleaning Active Players dataset...")
     df = pd.read_csv("uncleaned_csv/ACTIVE_PLAYERS.csv")
 
-    original_shape = df.shape
-    original_missing = df.isnull().sum()
 
     # 1. Handle missing values (strategic approach)
     # Drop rows where critical columns are missing
@@ -243,7 +226,7 @@ def clean_ACTIVE_PLAYERS():
         upper_bound = Q3 + 1.5 * IQR
         df = df[(df[col] >= lower_bound) & (df[col] <= upper_bound)]
 
-    print(f"  → Outlier removal: {original_before_outliers - len(df)} rows removed ({((original_before_outliers - len(df))/original_before_outliers*100):.1f}%)")
+    print(f"Outlier removal: {original_before_outliers - len(df)} rows removed ({((original_before_outliers - len(df))/original_before_outliers*100):.1f}%)")
 
     # 4. Formatting - standardize text columns
     for col in categorical_cols:
@@ -252,8 +235,8 @@ def clean_ACTIVE_PLAYERS():
     # Save the cleaned data
     df.to_csv("cleaned_csv/ACTIVE_PLAYERS_CLEANED.csv", index=False)
 
-    print_cleaning_summary("Active Players", original_shape, df.shape, original_missing, df.isnull().sum())
-    print("✓ Saved: cleaned_csv/ACTIVE_PLAYERS_CLEANED.csv")
+
+    print("Saved: cleaned_csv/ACTIVE_PLAYERS_CLEANED.csv")
     
 
 
