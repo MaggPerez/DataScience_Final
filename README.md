@@ -543,18 +543,6 @@ Teams should value **basketball IQ and skill versatility** over traditional meas
 4. **NBA Official Stats** - https://www.nba.com/stats
    - Advanced metrics definitions
 
----
-
-## 👥 Team Contributions
-
-[Fill in your team member contributions here]
-
-- **[Name]:** Data collection and scraping, API integration
-- **[Name]:** Data cleaning and preprocessing
-- **[Name]:** Statistical analysis and correlation studies
-- **[Name]:** Visualization development and interpretation
-- **[Name]:** Report writing and documentation
-- **[All]:** Collaborative analysis and insights generation
 
 ---
 
