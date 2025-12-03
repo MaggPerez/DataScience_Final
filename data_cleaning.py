@@ -42,7 +42,7 @@ def clean_data():
    Output: "nba_teams_CLEANED.csv"
 
    Issues Addressed:
-   - Missing values in team information (rare, but possible)
+   - Missing values in team information
    - Duplicate team entries
    - Inconsistent text formatting
 
@@ -74,8 +74,20 @@ def clean_get_all_teams():
 
 
 
-"""2. Cleaning the All Players of All Time CSV
-    "all_players_CLEANED.csv"""
+"""
+2. Cleaning the All Players of All Time CSV
+   Output: "all_players_CLEANED.csv"
+
+   Issues Addressed:
+   - Missing values in player names or IDs
+   - Duplicate player entries
+   - Inconsistent text formatting in names
+
+   Cleaning Decisions:
+   - Missing values: Fill with 'Unknown' to maintain record existence
+   - Duplicates: Remove to ensure unique player records
+   - Text formatting: Standardize first and last names to title case
+"""
 def clean_get_all_players_of_all_time():
     # Load the data
     df = pd.read_csv("uncleaned_csv/all_players.csv")
@@ -102,8 +114,27 @@ def clean_get_all_players_of_all_time():
     print("\nCleaned data saved to cleaned_csv/all_players_CLEANED.csv")
     
 
-"""3. Cleaning Single Player by ID CSV
-    "Nikola_Jokic_Info_CLEANED.csv
+
+
+
+"""
+3. Cleaning Single Player by ID CSV
+   Output: "Nikola_Jokic_Info_CLEANED.csv"
+
+   Issues Addressed:
+   - Unnecessary index columns from raw export
+   - Missing values in statistical columns (numeric and categorical)
+   - Duplicate entries
+   - Inconsistent formatting in team abbreviations
+   - Incorrect data types (e.g., Age as string)
+
+   Cleaning Decisions:
+   - Unnamed columns: Dropped artifacts
+   - Missing numeric: Filled with 0 assuming no stats recorded
+   - Missing categorical: Filled with 'Unknown'
+   - Duplicates: Removed
+   - Formatting: Team abbreviations standardized to uppercase
+   - Data Types: Converted Age to float for numerical analysis
 """
 def clean_single_player_by_id():
     # Load the data
@@ -141,10 +172,23 @@ def clean_single_player_by_id():
     # Save the cleaned data
     df.to_csv("cleaned_csv/Nikola_Jokic_Info_CLEANED.csv", index=False)
     print("\nCleaned data saved to cleaned_csv/Nikola_Jokic_Info_CLEANED.csv")
+ 
+ 
     
     
-"""4. Cleaning Player Info by Full Name CSV
-    "AlexAbrines_CLEANED.csv
+"""
+4. Cleaning Player Info by Full Name CSV
+   Output: "AlexAbrines_CLEANED.csv"
+
+   Issues Addressed:
+   - Missing values in player details
+   - Duplicate records
+   - Inconsistent capitalization in names
+
+   Cleaning Decisions:
+   - Missing values: Fill with 'Unknown'
+   - Duplicates: Remove to ensure unique records
+   - Text formatting: Standardize names to title case for consistency
 """
 def clean_player_info_by_full_name():
     # Load the data
@@ -170,6 +214,9 @@ def clean_player_info_by_full_name():
     # Save the cleaned data
     df.to_csv("cleaned_csv/AlexAbrines_CLEANED.csv", index=False)
     print("\nCleaned data saved to cleaned_csv/AlexAbrines_CLEANED.csv")
+
+
+
 
 
 
@@ -240,9 +287,23 @@ def clean_ACTIVE_PLAYERS():
     
 
 
+
+
 """
 6. Cleaning the Advanced Team Stats CSV
-    "advanced_team_stats_CLEANED.csv"
+   Output: "advanced_team_stats_CLEANED.csv"
+
+   Issues Addressed:
+   - Irrelevant columns for analysis
+   - Inconsistent text formatting and data types
+   - Missing values in critical metrics
+   - Logical inconsistencies (e.g., Wins + Losses != Games Played)
+
+   Cleaning Decisions:
+   - Column Selection: Kept only relevant metrics (W, L, Ratings)
+   - Formatting: Stripped whitespace, coerced numeric types
+   - Missing Values: Dropped rows with missing critical data
+   - Logic Checks: Verified GP > 0 and W + L consistency
 """
 def clean_advanced_team_stats():
     print("\nCleaning: Advanced Team Stats...")
@@ -338,10 +399,23 @@ def clean_advanced_team_stats():
         print("File not found. Please ensure 'uncleaned_csv/advanced_team_stats.csv' exists.")
         
         
+        
 
 """
 7. Cleaning League Standings
-   "league_standings_CLEANED.csv"
+   Output: "league_standings_CLEANED.csv"
+
+   Issues Addressed:
+   - Missing values in clinch indicators (often empty if not clinched)
+   - Missing numeric values (e.g., Games Back)
+   - Inconsistent text formatting in city/team names
+   - Logical outliers in percentages and points per game
+
+   Cleaning Decisions:
+   - Clinch columns: Filled NaNs with 'No' (logical assumption)
+   - Numeric NaNs: Filled with 0
+   - Text formatting: Standardized to title case
+   - Outliers: Filtered WinPCT (0-1) and PointsPG (60-160) to remove bad data
 """
 def clean_league_standings():
     print("\nCleaning: League Standings...")
