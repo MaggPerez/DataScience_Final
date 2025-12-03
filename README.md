@@ -2,7 +2,7 @@
 
 **Data Science Final Project**
 **Course:** CSC366 - Principles of Data Science
-**Team Members:** [Your Names]
+**Team Members:** Bryant Velasquez, Magdaleno Perez, Howie Gu
 **Date:** December 2025
 
 ---
@@ -104,7 +104,6 @@ Method: Interquartile Range (IQR)
 - **Removed players:** Potentially legitimate extremes like very tall centers
 - **Trade-off:** Clean distribution vs. complete data coverage
 
-⚠️ **Limitation:** Future analysis should review removed players to ensure no legitimate NBA athletes were excluded.
 
 #### 3. **Data Type Standardization**
 - Height: Converted "6-7" format → 79 inches (numeric)
@@ -126,8 +125,6 @@ Method: Interquartile Range (IQR)
 **Documentation:** All cleaning functions include detailed docstrings explaining decisions. See `data_cleaning.py` for complete implementation.
 
 ---
-
-## 📈 Exploratory Data Analysis (EDA)
 
 ### Player Physical Attributes Analysis
 
@@ -370,7 +367,7 @@ For each numeric variable, we calculated:
 - Range: 165 to 290 lbs | IQR: 195 to 235 lbs
 - Outliers: ~7% (heavy centers, light guards)
 
-**Interpretation:** Weight shows more variance than height (CV = 13.2% for weight vs. 4.8% for height), indicating position-specific weight optimization strategies.
+**Interpretation:** Weight shows more variance than height (CV = 13.2% for weight vs. 4.8% for height), indicating position specific weight optimization strategies.
 
 ---
 
@@ -439,13 +436,6 @@ Teams and analysts should prioritize Net Rating over raw win-loss records when e
 - Trade decisions (will this player improve our net rating?)
 - Coaching effectiveness (did our system improve point differential?)
 
-**Real-World Application:**
-NBA front offices increasingly use Net Rating in:
-- MVP voting (Nikola Jokic's Net Rating impact)
-- All-Star selection
-- Trade deadline decisions
-- Draft prospect evaluation
-
 ---
 
 #### 2. **Offense and Defense Are Equally Important (and Independent)**
@@ -459,9 +449,6 @@ The old debate "Does offense or defense win championships?" is **false dichotomy
 - A +5 offensive advantage is equivalent to a -5 defensive advantage
 - Championship teams excel at BOTH (top 10 in both categories)
 - Teams cannot ignore one side of the ball
-
-**Coaching Insight:**
-Balanced team building is optimal. Over-investing in offense while neglecting defense (or vice versa) is suboptimal strategy.
 
 ---
 
@@ -530,35 +517,6 @@ Teams should value **basketball IQ and skill versatility** over traditional meas
 
 ---
 
-### Future Research Directions
-
-1. **Predictive Modeling**
-   - Build regression models to predict wins from player/team stats
-   - Machine learning for playoff success prediction
-   - Forecasting future player performance
-
-2. **Player Impact Analysis**
-   - Isolate individual player contributions to Net Rating
-   - +/- statistics and adjusted plus-minus
-   - Quantify Jokic's unique value proposition
-
-3. **Temporal Analysis**
-   - How has the NBA evolved over decades?
-   - Is three-point shooting increasing Net Rating importance?
-   - Are traditional positions becoming obsolete?
-
-4. **Advanced Visualization**
-   - Interactive dashboards (Plotly, Dash)
-   - Shot charts and spatial analysis
-   - Network analysis of passing patterns
-
-5. **Causal Inference**
-   - Does improving offensive rating CAUSE wins? (vs. correlation)
-   - Natural experiments (coaching changes, trades)
-   - Propensity score matching
-
----
-
 ## 🛠️ Technical Implementation
 
 ### Technologies Used
@@ -568,92 +526,6 @@ Teams should value **basketball IQ and skill versatility** over traditional meas
 - **Visualization:** `matplotlib`, `seaborn`
 - **Statistics:** `scipy`
 
-### Project Structure
-```
-NBA-Analytics/
-│
-├── README.md                        # This comprehensive report
-├── requirements.txt                 # Python dependencies
-│
-├── main.py                          # Data scraping pipeline
-├── data_cleaning.py                 # Comprehensive cleaning with documentation
-├── descriptive_stats.py             # Statistical analysis & correlation matrices
-├── enhanced_visualizations.py       # All visualizations with interpretations
-│
-├── ACTIVE_PLAYERS_GRAPHS.py         # Original player visualizations
-├── Nikola_Jokic_Graph.py            # Original Jokic analysis
-├── StoryGraphs.py                   # Original team performance visualizations
-│
-├── uncleaned_csv/                   # Raw data from APIs
-│   ├── nba_teams.csv
-│   ├── all_players.csv
-│   ├── ACTIVE_PLAYERS.csv
-│   ├── Nikola_Jokic_Info.csv
-│   ├── advanced_team_stats.csv
-│   └── league_standings.csv
-│
-├── cleaned_csv/                     # Processed data ready for analysis
-│   ├── nba_teams_CLEANED.csv
-│   ├── all_players_CLEANED.csv
-│   ├── ACTIVE_PLAYERS_CLEANED.csv
-│   ├── Nikola_Jokic_Info_CLEANED.csv
-│   ├── advanced_team_stats_CLEANED.csv
-│   └── league_standings_CLEANED.csv
-│
-└── visualizations/                  # All generated plots
-    ├── 1_height_distribution.png
-    ├── 2_weight_distribution.png
-    ├── ...
-    ├── 13_jokic_assists.png
-    ├── team_correlation_heatmap.png
-    ├── player_correlation_heatmap.png
-    ├── height_by_position_boxplot.png
-    └── weight_by_position_boxplot.png
-```
-
-### Reproducibility Instructions
-
-To reproduce this analysis:
-
-1. **Clone repository and install dependencies:**
-```bash
-git clone [repository-url]
-cd NBA-Analytics
-pip install -r requirements.txt
-```
-
-2. **Set up API credentials:**
-```bash
-# Create .env file with your Ball Don't Lie API key
-echo "nba_api_key=YOUR_API_KEY_HERE" > .env
-```
-
-3. **Run data collection:**
-```bash
-python main.py
-```
-
-4. **Run data cleaning:**
-```bash
-python data_cleaning.py
-```
-
-5. **Generate statistical analysis:**
-```bash
-python descriptive_stats.py
-```
-
-6. **Create visualizations:**
-```bash
-python enhanced_visualizations.py
-```
-
-7. **View results:**
-- Statistical output: Console output from `descriptive_stats.py`
-- Visualizations: `visualizations/` directory
-- Cleaned data: `cleaned_csv/` directory
-
----
 
 ## 📚 References & Data Sources
 
@@ -706,45 +578,3 @@ python enhanced_visualizations.py
 - **Standard Deviation:** Average distance from mean
 - **Median:** Middle value, robust to outliers
 - **Outlier:** Data point significantly different from others (1.5×IQR rule)
-
----
-
-## 📧 Contact
-
-For questions or feedback about this analysis, please contact:
-- [Your Name]: [email]
-- [Your Name]: [email]
-
-**Repository:** [GitHub URL]
-**Last Updated:** December 2025
-
----
-
-## ✅ Rubric Self-Assessment
-
-Based on the CSC366 rubric for this project:
-
-| Criterion | Points | Self-Assessment | Justification |
-|-----------|--------|-----------------|---------------|
-| **Data Cleaning & Preparation** | 5/5 | ✅ Excellent | Thorough documentation of issues, decisions, and impact; clear before/after statistics |
-| **Exploratory Data Analysis** | 10/10 | ✅ Excellent | Comprehensive EDA with summaries, distributions, visualizations, and detailed interpretations |
-| **Descriptive Statistical Analysis** | 10/10 | ✅ Excellent | Complete calculation of mean, median, mode, std dev, variance, outliers with interpretations |
-| **Visual Storytelling & Interpretation** | 10/10 | ✅ Excellent | Clear visualizations with effective narrative connecting findings; cohesive story throughout |
-| **Conclusions & Insights** | 5/5 | ✅ Excellent | Research question answered thoroughly; demonstrates deep understanding; supported by analysis |
-| **TOTAL** | **40/40** | **100%** | All rubric requirements met at excellence level |
-
-**Improvements Made to Achieve Excellence:**
-1. ✅ Added comprehensive statistical analysis with all required metrics
-2. ✅ Documented every cleaning decision with justification
-3. ✅ Provided detailed interpretations for every visualization
-4. ✅ Created correlation matrices and heatmaps
-5. ✅ Wrote cohesive narrative connecting all findings
-6. ✅ Stated clear research question and conclusions
-7. ✅ Included limitations section showing critical thinking
-8. ✅ Added before/after statistics for data cleaning
-9. ✅ Created boxplots for distribution comparison
-10. ✅ Demonstrated deep understanding of basketball and statistics
-
----
-
-**🏀 End of Report**
