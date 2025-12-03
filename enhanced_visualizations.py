@@ -171,13 +171,21 @@ def create_player_visualizations():
                      .agg(['mean', 'std']))
     height_by_pos = height_by_pos.sort_values('mean', ascending=False)
 
+    # Replace NaN std with 0 for positions with only 1 player
+    height_by_pos['std'] = height_by_pos['std'].fillna(0)
+
     bars = plt.bar(height_by_pos.index, height_by_pos['mean'],
                    yerr=height_by_pos['std'], capsize=5,
                    color='skyblue', edgecolor='black', alpha=0.8)
 
     # Add value labels
     for i, (pos, row) in enumerate(height_by_pos.iterrows()):
-        plt.text(i, row['mean'] + row['std'] + 0.5, f"{row['mean']:.1f}\"",
+        # For positions with std=0 (only 1 player), use fixed offset; otherwise use std + offset
+        if row['std'] == 0:
+            y_position = row['mean'] + 2.0  # Fixed offset for single-player positions
+        else:
+            y_position = row['mean'] + row['std'] + 0.5
+        plt.text(i, y_position, f"{row['mean']:.1f}\"",
                 ha='center', fontweight='bold')
 
     plt.xlabel("Position", fontsize=12, fontweight='bold')
@@ -199,13 +207,21 @@ def create_player_visualizations():
                      .agg(['mean', 'std']))
     weight_by_pos = weight_by_pos.sort_values('mean', ascending=False)
 
+    # Replace NaN std with 0 for positions with only 1 player
+    weight_by_pos['std'] = weight_by_pos['std'].fillna(0)
+
     bars = plt.bar(weight_by_pos.index, weight_by_pos['mean'],
                    yerr=weight_by_pos['std'], capsize=5,
                    color='salmon', edgecolor='black', alpha=0.8)
 
     # Add value labels
     for i, (pos, row) in enumerate(weight_by_pos.iterrows()):
-        plt.text(i, row['mean'] + row['std'] + 2, f"{row['mean']:.0f} lbs",
+        # For positions with std=0 (only 1 player), use fixed offset; otherwise use std + offset
+        if row['std'] == 0:
+            y_position = row['mean'] + 10  # Fixed offset for single-player positions
+        else:
+            y_position = row['mean'] + row['std'] + 2
+        plt.text(i, y_position, f"{row['mean']:.0f} lbs",
                 ha='center', fontweight='bold')
 
     plt.xlabel("Position", fontsize=12, fontweight='bold')
