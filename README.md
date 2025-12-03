@@ -160,8 +160,8 @@ Weight distribution shows a **bell-shaped curve** centered around 210-220 lbs, o
 ![Position Distribution](visualizations/3_position_distribution.png)
 
 **Statistical Summary:**
-- Most common position: [Will be filled after running script]
-- Position count range: [X] to [Y] players
+- Most common position: G (43 Players)
+- Position count range: 1 to 43 Players
 - Average players per position: ~76 (assuming 380 total / 5 positions)
 
 **Interpretation:**
@@ -281,7 +281,7 @@ The bar chart reveals competitive parity in the NBA:
 
 **Statistical Summary:**
 - **Career average:** ~1,400-1,700 points per season
-- **Peak season:** [Year] with [X] points
+- **Peak season:** 2023-24 with 2085 points
 - **Trend:** Consistent elite scoring throughout career
 
 **Interpretation:**
